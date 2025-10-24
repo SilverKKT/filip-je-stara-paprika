@@ -3,267 +3,153 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Filip je stará paprika</title>
-  <style>
-    /* Reset-ish */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  <title>Filip je stará paprika 🌶️</title>
 
-    :root {
-      --bg-color: radial-gradient(circle at 20% 20%, #1a1a1a 0%, #000 70%);
-      --card-bg: rgba(255,255,255,0.07);
-      --card-border: rgba(255,255,255,0.12);
-      --text-main: #fff;
-      --text-dim: rgba(255,255,255,0.6);
-      --accent: #ff544a;
-      --radius-lg: 24px;
-      --radius-sm: 10px;
-      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Inter", Roboto, "Helvetica Neue", sans-serif;
-    }
+  <!-- Favicon (emoji paprika) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌶️</text></svg>">
+
+  <style>
+    /* Reset & základ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      min-height: 100svh;
-      background: var(--bg-color);
-      color: var(--text-main);
-      font-family: var(--font-stack);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    .wrap {
-      width: 100%;
-      max-width: 480px;
+      font-family: "Inter", system-ui, sans-serif;
+      background: radial-gradient(circle at 20% 20%, #1a1a1a, #000);
+      color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2rem;
+      justify-content: center;
+      min-height: 100vh;
       text-align: center;
+      overflow: hidden;
     }
 
-    header .badge {
-      display: inline-block;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--accent);
-      font-size: 0.75rem;
-      font-weight: 600;
-      line-height: 1;
-      padding: 0.5rem 0.75rem;
-      border-radius: var(--radius-sm);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-      backdrop-filter: blur(8px);
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      margin-bottom: 0.5rem;
+      color: #ff5544;
+      text-shadow: 0 0 12px rgba(255, 85, 68, 0.8);
+      animation: glowIn 1.5s ease-out;
     }
 
-    header h1 {
-      font-size: clamp(1.6rem, 1vw + 1.3rem, 2rem);
-      font-weight: 600;
-      line-height: 1.2;
-      color: var(--text-main);
-      margin-top: 0.75rem;
-    }
-
-    header p {
-      color: var(--text-dim);
+    p {
+      color: #bbb;
       font-size: 0.9rem;
-      line-height: 1.4;
-      max-width: 32ch;
-      margin: 0.5rem auto 0;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards 1s;
     }
 
-    .card {
-      width: 100%;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem 1.25rem 1rem;
-      box-shadow:
-        0 30px 120px rgba(0,0,0,0.8),
-        0 2px 4px rgba(0,0,0,0.6) inset;
-      backdrop-filter: blur(12px);
-      position: relative;
+    .countdown {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
-    /* jemný glow nahoře */
-    .card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 50%;
-      translate: -50% -60%;
-      width: 60%;
-      height: 160px;
-      background: radial-gradient(circle at 50% 0%, rgba(255,84,74,0.4) 0%, rgba(0,0,0,0) 70%);
-      filter: blur(30px);
-      pointer-events: none;
-    }
-
-    .countdown-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.75rem;
-    }
-
-    .time-block {
-      background: rgba(0,0,0,0.4);
-      border-radius: var(--radius-sm);
-      padding: 0.9rem 0.5rem;
-      border: 1px solid rgba(255,255,255,0.08);
-      min-width: 0;
+    .block {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      padding: 1rem;
+      min-width: 70px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 15px rgba(255, 85, 68, 0.1);
+      animation: popIn 0.5s ease forwards;
     }
 
     .num {
-      font-variant-numeric: tabular-nums;
-      font-feature-settings: "tnum";
-      font-size: clamp(1.4rem, 1vw + 1rem, 1.8rem);
+      font-size: 1.8rem;
       font-weight: 600;
-      line-height: 1.1;
-      color: var(--text-main);
+      color: #fff;
     }
 
     .label {
       font-size: 0.7rem;
-      line-height: 1.2;
-      font-weight: 500;
-      color: var(--text-dim);
-      margin-top: 0.4rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
+      color: #ff9e90;
     }
 
     footer {
       font-size: 0.7rem;
-      line-height: 1.4;
-      color: var(--text-dim);
+      color: #777;
+      margin-top: 2rem;
+      opacity: 0.7;
     }
 
-    footer code {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 6px;
-      padding: 0.15rem 0.4rem;
-      font-size: 0.7rem;
-      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
-      color: var(--accent);
+    #doneMessage {
+      display: none;
+      color: #ff5544;
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+      text-shadow: 0 0 10px rgba(255,85,68,0.8);
+      animation: glowIn 1.5s ease-in-out infinite alternate;
     }
 
-    @media (max-width: 420px) {
-      .countdown-grid {
-        gap: 0.5rem;
-      }
-      .time-block {
-        padding: 0.7rem 0.4rem;
-      }
-      .num {
-        font-size: 1.4rem;
-      }
-      .label {
-        font-size: 0.6rem;
-      }
+    @keyframes glowIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: translateY(10px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <header>
-      <div class="badge">Filip je stará paprika 🌶️</div>
-      <h1>Odpočet do výročí od 28.&nbsp;října</h1>
-      <p>
-        Sleduj, kolik času zbývá, než to celé oficiálně bude rok.
-      </p>
-    </header>
+  <h1>Filip je stará paprika 🌶️</h1>
+  <p>Odpočet do 28.&nbsp;října 2026 — den, kdy paprika dozraje do dokonalosti.</p>
 
-    <section class="card" aria-live="polite">
-      <div class="countdown-grid" id="countdown">
-        <div class="time-block">
-          <div class="num" id="days">–</div>
-          <div class="label">dní</div>
-        </div>
-        <div class="time-block">
-          <div class="num" id="hours">–</div>
-          <div class="label">hodin</div>
-        </div>
-        <div class="time-block">
-          <div class="num" id="mins">–</div>
-          <div class="label">minut</div>
-        </div>
-        <div class="time-block">
-          <div class="num" id="secs">–</div>
-          <div class="label">sekund</div>
-        </div>
-      </div>
+  <div class="countdown" id="countdown">
+    <div class="block"><div class="num" id="days">–</div><div class="label">dní</div></div>
+    <div class="block"><div class="num" id="hours">–</div><div class="label">hodin</div></div>
+    <div class="block"><div class="num" id="mins">–</div><div class="label">minut</div></div>
+    <div class="block"><div class="num" id="secs">–</div><div class="label">sekund</div></div>
+  </div>
 
-      <div id="doneMessage" style="
-        display:none;
-        text-align:center;
-        font-size:1rem;
-        font-weight:500;
-        color:var(--accent);
-        margin-top:1rem;
-      ">
-        Hotovo. Rok vypršel. Filip už není jen stará paprika. Teď je <strong>extra marinovaná paprika</strong>. 🎉
-      </div>
-    </section>
+  <div id="doneMessage">🔥 Hotovo! Filip už není stará paprika — teď je <u>uzená legenda</u>. 🔥</div>
 
-    <footer>
-      <div>Cílové datum: <code>28. 10. 2026 00:00</code> (Evropa/Praha)</div>
-    </footer>
-  </main>
+  <footer>© 2025 Filip paprika™ | Čas běží...</footer>
 
   <script>
-    // Nastav cílové datum (28. října 2026 v 00:00 v místním čase)
-    const targetDate = new Date(2026, 9, 28, 0, 0, 0); 
-    // Pozn.: měsíce v JS jedou 0–11, takže 9 = říjen
-
-    const daysEl  = document.getElementById("days");
-    const hrsEl   = document.getElementById("hours");
-    const minsEl  = document.getElementById("mins");
-    const secsEl  = document.getElementById("secs");
+    const targetDate = new Date(2026, 9, 28, 0, 0, 0);
+    const daysEl = document.getElementById("days");
+    const hrsEl = document.getElementById("hours");
+    const minsEl = document.getElementById("mins");
+    const secsEl = document.getElementById("secs");
     const doneMsg = document.getElementById("doneMessage");
-    const grid    = document.getElementById("countdown");
+    const countdown = document.getElementById("countdown");
 
     function updateCountdown() {
       const now = new Date();
-      const diffMs = targetDate - now;
+      const diff = targetDate - now;
 
-      if (diffMs <= 0) {
-        // Odpočet hotový
-        grid.style.display = "none";
+      if (diff <= 0) {
+        countdown.style.display = "none";
         doneMsg.style.display = "block";
         return;
       }
 
-      // diffSec = zbývající sekundy
-      const diffSecTotal = Math.floor(diffMs / 1000);
+      const totalSec = Math.floor(diff / 1000);
+      const days = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
+      const mins = Math.floor((totalSec % 3600) / 60);
+      const secs = totalSec % 60;
 
-      const days = Math.floor(diffSecTotal / (60 * 60 * 24));
-
-      const hours = Math.floor(
-        (diffSecTotal % (60 * 60 * 24)) / (60 * 60)
-      );
-
-      const mins = Math.floor(
-        (diffSecTotal % (60 * 60)) / 60
-      );
-
-      const secs = diffSecTotal % 60;
-
-      daysEl.textContent  = String(days);
-      hrsEl.textContent   = String(hours).padStart(2, "0");
-      minsEl.textContent  = String(mins).padStart(2, "0");
-      secsEl.textContent  = String(secs).padStart(2, "0");
+      daysEl.textContent = days;
+      hrsEl.textContent = String(hours).padStart(2, "0");
+      minsEl.textContent = String(mins).padStart(2, "0");
+      secsEl.textContent = String(secs).padStart(2, "0");
     }
 
-    // Aktualizuj hned při načtení:
     updateCountdown();
-    // A pak každou vteřinu:
     setInterval(updateCountdown, 1000);
   </script>
 </body>
