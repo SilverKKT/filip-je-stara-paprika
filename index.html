@@ -3,154 +3,396 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Filip je stará paprika 🌶️</title>
+  <title>Filip je stará píča 🌶️</title>
 
-  <!-- Favicon (emoji paprika) -->
+  <!-- Favicon paprika -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌶️</text></svg>">
 
   <style>
-    /* Reset & základ */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-main: radial-gradient(circle at 20% 20%, #1a1a1a 0%, #000 70%);
+      --fg-accent: #ff5544;
+      --fg-soft: #bbb;
+      --fg-dim: #777;
+      --card-bg: rgba(255,255,255,0.05);
+      --card-border: rgba(255,255,255,0.1);
+      --radius-lg: 1rem;
+      --blur-bg: blur(6px);
+      --font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    }
 
     body {
-      font-family: "Inter", system-ui, sans-serif;
-      background: radial-gradient(circle at 20% 20%, #1a1a1a, #000);
+      min-height: 100vh;
+      background: var(--bg-main);
       color: #fff;
+      font-family: var(--font);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
       text-align: center;
+      padding: 2rem;
+      position: relative;
       overflow: hidden;
     }
 
-    h1 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      margin-bottom: 0.5rem;
-      color: #ff5544;
-      text-shadow: 0 0 12px rgba(255, 85, 68, 0.8);
-      animation: glowIn 1.5s ease-out;
+    /* lehce červený pulsující žár v pozadí */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 60vmax;
+      height: 60vmax;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle at 50% 50%, rgba(255, 60, 0, 0.35) 0%, rgba(0,0,0,0) 70%);
+      filter: blur(60px);
+      opacity: 0.25;
+      animation: pulseBg 4s ease-in-out infinite;
+      pointer-events: none;
     }
 
-    p {
-      color: #bbb;
+    @keyframes pulseBg {
+      0%   { opacity: 0.15; transform: translate(-50%, -50%) scale(0.9); }
+      50%  { opacity: 0.4;  transform: translate(-50%, -50%) scale(1.05); }
+      100% { opacity: 0.15; transform: translate(-50%, -50%) scale(0.9); }
+    }
+
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--fg-accent);
+      text-shadow: 0 0 12px rgba(255,85,68,0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: glowIn 1.4s ease both;
+    }
+
+    .flame {
+      font-size: 2rem;
+      line-height: 1;
+      display: inline-block;
+      filter: drop-shadow(0 0 8px rgba(255,120,0,0.8));
+      animation: flameWiggle 0.25s infinite alternate;
+      margin-top: 0.5rem;
+    }
+
+    @keyframes flameWiggle {
+      from { transform: translateY(0) scale(1); }
+      to   { transform: translateY(-2px) scale(1.05) rotate(-2deg); }
+    }
+
+    p.tagline {
+      color: var(--fg-soft);
       font-size: 0.9rem;
+      line-height: 1.4;
+      margin-top: 1rem;
       margin-bottom: 2rem;
       opacity: 0;
-      animation: fadeIn 2s ease forwards 1s;
+      animation: fadeIn 1.2s ease forwards 0.8s;
     }
 
-    .countdown {
+    .countdown-wrap {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1rem;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6) inset;
+      backdrop-filter: var(--blur-bg);
+      position: relative;
+      overflow: hidden;
+      animation: popIn 0.5s ease both;
+    }
+
+    /* jemný červeno-oranž glow nahoře na kartě */
+    .countdown-wrap::after {
+      content: "";
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle at 50% 30%, rgba(255,85,68,0.4) 0%, rgba(0,0,0,0) 70%);
+      filter: blur(30px);
+      pointer-events: none;
+    }
+
+    .countdown-grid {
       display: flex;
-      gap: 1rem;
-      justify-content: center;
       flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
     }
 
-    .block {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 1rem;
-      padding: 1rem;
+    .time-block {
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0.8rem;
       min-width: 70px;
-      backdrop-filter: blur(5px);
-      box-shadow: 0 0 15px rgba(255, 85, 68, 0.1);
-      animation: popIn 0.5s ease forwards;
+      padding: 0.9rem 0.6rem;
+      box-shadow: 0 0 15px rgba(255, 85, 68, 0.15);
     }
 
     .num {
-      font-size: 1.8rem;
+      font-size: clamp(1.5rem, 1vw + 1rem, 1.8rem);
       font-weight: 600;
+      line-height: 1.1;
       color: #fff;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
     }
 
     .label {
       font-size: 0.7rem;
-      text-transform: uppercase;
+      line-height: 1.2;
+      font-weight: 500;
       color: #ff9e90;
-    }
-
-    footer {
-      font-size: 0.7rem;
-      color: #777;
-      margin-top: 2rem;
-      opacity: 0.7;
+      margin-top: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
     }
 
     #doneMessage {
       display: none;
-      color: #ff5544;
+      text-align: center;
+      font-size: 1rem;
       font-weight: 600;
-      font-size: 1.2rem;
-      margin-top: 1.5rem;
+      color: var(--fg-accent);
+      margin-top: 1.25rem;
       text-shadow: 0 0 10px rgba(255,85,68,0.8);
-      animation: glowIn 1.5s ease-in-out infinite alternate;
+      animation: glowPulse 1.3s ease-in-out infinite alternate;
     }
 
     @keyframes glowIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+      0%   { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     @keyframes popIn {
-      0% { opacity: 0; transform: translateY(10px) scale(0.9); }
+      0%   { opacity: 0; transform: translateY(10px) scale(0.95); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     @keyframes fadeIn {
       to { opacity: 1; }
     }
+
+    @keyframes glowPulse {
+      0%   { text-shadow: 0 0 6px rgba(255,85,68,0.5), 0 0 20px rgba(255,120,0,0.15); }
+      100% { text-shadow: 0 0 12px rgba(255,85,68,0.9), 0 0 32px rgba(255,120,0,0.4); }
+    }
+
+    .roast-box {
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: #bbb;
+      text-align: center;
+      margin-top: 1rem;
+      min-height: 2.5em;
+      padding: 0 0.5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 1s;
+    }
+
+    .roast-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #666;
+      margin-top: 2rem;
+      font-weight: 500;
+    }
+
+    footer {
+      font-size: 0.7rem;
+      line-height: 1.4;
+      color: var(--fg-dim);
+      margin-top: 2rem;
+      opacity: 0.7;
+    }
+
+    footer .legal {
+      font-size: 0.6rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    code {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      padding: 0.15rem 0.4rem;
+      font-size: 0.7rem;
+      color: var(--fg-accent);
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    }
+.funny-scene {
+  margin-top: 2rem;
+  text-align: center;
+  animation: fadeIn 1.5s ease forwards 1s;
+}
+
+.funny-gif {
+  width: 220px;
+  max-width: 80%;
+  border-radius: 10px;
+  filter: drop-shadow(0 0 12px rgba(255,85,68,0.3));
+}
+
+.caption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #ff9e90;
+}
   </style>
 </head>
 <body>
-  <h1>Filip je stará paprika 🌶️</h1>
-  <p>Odpočet do 28.&nbsp;října 2026 — den, kdy paprika dozraje do dokonalosti.</p>
+  <main>
+    <h1>
+      Filip je stará píča 🌶️
+      <span class="flame" aria-hidden="true">🔥</span>
+    </h1>
 
-  <div class="countdown" id="countdown">
-    <div class="block"><div class="num" id="days">–</div><div class="label">dní</div></div>
-    <div class="block"><div class="num" id="hours">–</div><div class="label">hodin</div></div>
-    <div class="block"><div class="num" id="mins">–</div><div class="label">minut</div></div>
-    <div class="block"><div class="num" id="secs">–</div><div class="label">sekund</div></div>
-  </div>
+    <p class="tagline">
+      Odpočet do 28.&nbsp;října&nbsp;2026 — den, kdy už si to připomene navždy.
+      <br />
+      (Archiv hanby v reálném čase.)
+    </p>
 
-  <div id="doneMessage">🔥 Hotovo! Filip už není stará paprika — teď je <u>uzená legenda</u>. 🔥</div>
+    <section class="countdown-wrap" aria-live="polite">
+<div class="funny-scene">
+  <img 
+    src="https://c.tenor.com/nJzq-6C7pLoAAAAd/tenor.gif" 
+    alt="Filip potkává třicítku" 
+    class="funny-gif">
+  <p class="caption">Třicítka se pomalu blíží... 🕒</p>
+</div>
+      <div id="countdown" class="countdown-grid">
+        <div class="time-block">
+          <div class="num" id="days">–</div>
+          <div class="label">dní</div>
+        </div>
+        <div class="time-block">
+          <div class="num" id="hours">–</div>
+          <div class="label">hodin</div>
+        </div>
+        <div class="time-block">
+          <div class="num" id="mins">–</div>
+          <div class="label">minut</div>
+        </div>
+        <div class="time-block">
+          <div class="num" id="secs">–</div>
+          <div class="label">sekund</div>
+        </div>
+      </div>
 
-  <footer>© 2025 Filip paprika™ | Čas běží...</footer>
+      <div id="doneMessage">
+        🔔 HOTOVO. Rok utrpení oficiálně splněn. <br/>
+        Filip už není jen stará píča… <br/>
+        je to teď **certifikovaná legenda ostudy™**.
+      </div>
+
+      <div class="roast-box">
+        <div class="roast-label">Live status Filipa:</div>
+        <div id="roastline">Načítám aktuální úroveň trapnosti…</div>
+      </div>
+    </section>
+
+    <footer>
+      <div>Cílové datum: <code>28. 10. 2026 00:00</code> (Evropa/Praha)</div>
+      <div class="legal">
+        Tento web je pouze vědecký experiment měření trapnosti kamaráda.
+        <br/>Subjekt podepsal (morálně, když spal) souhlas.
+      </div>
+    </footer>
+  </main>
 
   <script>
+    // =============== COUNTDOWN ===============
+    // Cíl: 28. října 2026 00:00 (pozor: měsíc 9 = říjen, protože JS jede 0-11)
     const targetDate = new Date(2026, 9, 28, 0, 0, 0);
-    const daysEl = document.getElementById("days");
-    const hrsEl = document.getElementById("hours");
-    const minsEl = document.getElementById("mins");
-    const secsEl = document.getElementById("secs");
+
+    const daysEl  = document.getElementById("days");
+    const hrsEl   = document.getElementById("hours");
+    const minsEl  = document.getElementById("mins");
+    const secsEl  = document.getElementById("secs");
     const doneMsg = document.getElementById("doneMessage");
-    const countdown = document.getElementById("countdown");
+    const grid    = document.getElementById("countdown");
 
     function updateCountdown() {
       const now = new Date();
-      const diff = targetDate - now;
+      const diffMs = targetDate - now;
 
-      if (diff <= 0) {
-        countdown.style.display = "none";
+      if (diffMs <= 0) {
+        grid.style.display = "none";
         doneMsg.style.display = "block";
         return;
       }
 
-      const totalSec = Math.floor(diff / 1000);
+      const totalSec = Math.floor(diffMs / 1000);
+
       const days = Math.floor(totalSec / 86400);
       const hours = Math.floor((totalSec % 86400) / 3600);
       const mins = Math.floor((totalSec % 3600) / 60);
       const secs = totalSec % 60;
 
-      daysEl.textContent = days;
-      hrsEl.textContent = String(hours).padStart(2, "0");
-      minsEl.textContent = String(mins).padStart(2, "0");
-      secsEl.textContent = String(secs).padStart(2, "0");
+      daysEl.textContent  = String(days);
+      hrsEl.textContent   = String(hours).padStart(2, "0");
+      minsEl.textContent  = String(mins).padStart(2, "0");
+      secsEl.textContent  = String(secs).padStart(2, "0");
     }
 
     updateCountdown();
     setInterval(updateCountdown, 1000);
+
+
+    // =============== ROAST ROTATION ===============
+    const roastEl = document.getElementById("roastline");
+
+    const roasts = [
+      "Aktuální IQ: něco mezi toustovačem a mokrým hadrem.",
+      "Filip teď momentálně přemýšlí... už 14 minut na prázdno.",
+      "Legendární citát: 'to byl plán'. Nebyl.",
+      "Diagnóza: křupavě stará píča, archivováno pro budoucí generace.",
+      "Mozek v režimu úspory energie od roku 2019.",
+      "Technická závada: mozek se odpojil od těla.",
+      "Stupeň ostudy: 🔥🔥🔥 už se to nedá držet holou rukou.",
+      "Naposledy viděn s důstojností: nikdy.",
+      "Stav reputace: 'brácho to smaž pls'.",
+      "Kariérní plán: být varováním pro ostatní.",
+      "Filip tvrdí že to nebyla jeho vina. Komise nesouhlasí.",
+      "Vědecký fakt: tahle píča je starší než paprika v Lidlu za 9,90.",
+      "Aktuální status: Certified chodící cringe™.",
+      "Brain activity: buffering...",
+      "Filip říká 'v pohodě neřeš'. Historicky nikdy to nebylo v pohodě."
+    ];
+
+    function pickRoast() {
+      const i = Math.floor(Math.random() * roasts.length);
+      roastEl.textContent = roasts[i];
+    }
+
+    // první text hned
+    pickRoast();
+    // a pak točíme každých pár vteřin
+    setInterval(pickRoast, 5000);
   </script>
 </body>
 </html>
